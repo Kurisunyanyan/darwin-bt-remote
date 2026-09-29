@@ -27,3 +27,5 @@ vendor/bundle/
 .DS_Store
 /*.xcodeproj
 *.ipa
+
+build_output/
