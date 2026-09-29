@@ -357,6 +357,26 @@ extension L10n {
         static var space: LocalizedStringKey {
             "keyboard.space"
         }
+
+        static var deleteForward: LocalizedStringKey {
+            "keyboard.delete_forward"
+        }
+
+        static var capsLock: LocalizedStringKey {
+            "keyboard.caps_lock"
+        }
+
+        static var fullKeyboard: LocalizedStringKey {
+            "keyboard.full_keyboard"
+        }
+
+        static var trackpad: LocalizedStringKey {
+            "keyboard.trackpad"
+        }
+
+        static var classic: LocalizedStringKey {
+            "keyboard.classic"
+        }
     }
 
     enum DirectInput {

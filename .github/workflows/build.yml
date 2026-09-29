@@ -2,63 +2,116 @@ name: Build
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*.*.*"
   workflow_dispatch:
     inputs:
       version:
-        description: "v*.*.*"
-        required: true
+        description: "Release tag (optional, e.g. v0.0.5)"
+        required: false
         type: string
 
 jobs:
   build:
-    strategy:
-      matrix:
-        platform: [ios, mac]
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Bootstrap
+      - name: Install build tools
+        run: |
+          which xcodegen || brew install xcodegen
+          which xcbeautify || brew install xcbeautify
+
+      - name: Prepare project
         env:
           CI_PRIMARY_REPOSITORY_PATH: ${{ github.workspace }}
         run: |
-          sudo xcode-select -s /Applications/Xcode_26.3.app
+          chmod +x ci_scripts/ci_post_clone.sh
           ci_scripts/ci_post_clone.sh
 
-      - name: Build
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
-        run: fastlane ${{ matrix.platform }} release
+      - name: Build iOS IPA
+        run: |
+          PROJECT="BTRemote"
+          xcodebuild \
+            -project $PROJECT.xcodeproj \
+            -scheme $PROJECT \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -derivedDataPath .build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcbeautify
 
-      - name: Upload
+          rm -rf .build/Payload
+          mkdir -p .build/Payload
+          cp -R .build/DerivedData/Build/Products/Release-iphoneos/$PROJECT.app .build/Payload/
+          cd .build
+          zip -qry ../$PROJECT.ipa Payload
+          cd ..
+
+      - name: Build macOS App
+        run: |
+          PROJECT="BTRemote"
+          xcodebuild \
+            -project $PROJECT.xcodeproj \
+            -scheme $PROJECT \
+            -configuration Release \
+            -destination "platform=macOS" \
+            -derivedDataPath .build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcbeautify
+
+          codesign --force --sign - --entitlements $PROJECT/entitlements.plist .build/DerivedData/Build/Products/Release/$PROJECT.app || true
+          mkdir -p .build/macOS-dist
+          cp -R .build/DerivedData/Build/Products/Release/$PROJECT.app .build/macOS-dist/
+          cd .build/macOS-dist
+          zip -qry ../../$PROJECT-macOS.zip $PROJECT.app
+          cd ../..
+
+      - name: Upload iOS IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.platform }}
-          path: |
-            build/*.ipa
-            build/*.pkg
-          if-no-files-found: ignore
+          name: BTRemote-iOS-IPA
+          path: BTRemote.ipa
+          if-no-files-found: error
 
-  publish:
+      - name: Upload macOS App Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BTRemote-macOS-Zip
+          path: BTRemote-macOS.zip
+          if-no-files-found: error
+
+  release:
     needs: build
+    if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.version != ''
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v8
+      - name: Download iOS artifact
+        uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          name: BTRemote-iOS-IPA
+          path: release-artifacts
 
-      - name: Publish (GitHub)
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: BTRemote-macOS-Zip
+          path: release-artifacts
+
+      - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           TAG: ${{ github.event.inputs.version || github.ref_name }}
         run: |
           gh release create "$TAG" \
-            artifacts/ios/*.ipa \
-            artifacts/mac/*.pkg \
-            --title "$TAG"
+            release-artifacts/BTRemote.ipa \
+            release-artifacts/BTRemote-macOS.zip \
+            --title "$TAG" \
+            --notes "Automated release build for $TAG"

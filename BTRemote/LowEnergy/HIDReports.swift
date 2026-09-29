@@ -95,6 +95,7 @@ enum Keycode: UInt8, Sendable, Equatable, Hashable {
     case capsLock = 0x39
     case f1 = 0x3A, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12
     case printScreen = 0x46
+    case deleteForward = 0x4C
     case rightArrow = 0x4F
     case leftArrow = 0x50
     case downArrow = 0x51
