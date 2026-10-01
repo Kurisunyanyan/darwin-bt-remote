@@ -21,6 +21,14 @@ struct HIDInput {
         sendKeyboard(.zero)
     }
 
+    func keyDown(_ key: Keycode, modifiers: KeyboardModifiers = []) {
+        sendKeyboard(KeyboardReport(modifiers: modifiers, keys: [key]))
+    }
+
+    func keyUp() {
+        sendKeyboard(.zero)
+    }
+
     func tap(consumer: ConsumerKey) {
         sendConsumer(ConsumerReport(key: consumer))
         sendConsumer(.zero)

@@ -10,7 +10,7 @@ struct PressGesture: ViewModifier {
     @Binding var pressed: Bool
 
     func body(content: Content) -> some View {
-        content.gesture(
+        content.simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
                     if !pressed {
@@ -20,8 +20,10 @@ struct PressGesture: ViewModifier {
                     }
                 }
                 .onEnded { _ in
-                    pressed = false
-                    onRelease()
+                    if pressed {
+                        pressed = false
+                        onRelease()
+                    }
                 }
         )
     }
