@@ -7,24 +7,55 @@ struct FullKeyboardView: View {
 
     var body: some View {
         GeometryReader { geo in
-            let isCompact = geo.size.width < 560
-            let gap: CGFloat = isCompact ? 3 : 5
-            let totalRows: CGFloat = 6
-            let availableHeight = geo.size.height - (totalRows - 1) * gap
-            let keyHeight = min(isCompact ? 44 : 52, max(26, availableHeight / totalRows))
-
-            VStack(spacing: gap) {
-                keyRow(row0, width: geo.size.width, gap: gap, height: keyHeight, isCompact: isCompact)
-                keyRow(row1, width: geo.size.width, gap: gap, height: keyHeight, isCompact: isCompact)
-                keyRow(row2, width: geo.size.width, gap: gap, height: keyHeight, isCompact: isCompact)
-                keyRow(row3, width: geo.size.width, gap: gap, height: keyHeight, isCompact: isCompact)
-                keyRow(row4, width: geo.size.width, gap: gap, height: keyHeight, isCompact: isCompact)
-                keyRow(row5, width: geo.size.width, gap: gap, height: keyHeight, isCompact: isCompact)
+            let isLandscape = geo.size.width > geo.size.height
+            if isLandscape {
+                landscapeKeyboard(size: geo.size)
+            } else {
+                portraitKeyboard(size: geo.size)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
-        .padding(.horizontal, 6)
+        .padding(.horizontal, 4)
         .padding(.vertical, 4)
+    }
+
+    // MARK: - Landscape Keyboard (6 rows standard layout)
+
+    private func landscapeKeyboard(size: CGSize) -> some View {
+        let gap: CGFloat = 5
+        let totalRows: CGFloat = 6
+        let availableHeight = size.height - (totalRows - 1) * gap
+        let keyHeight = min(52, max(28, availableHeight / totalRows))
+
+        return VStack(spacing: gap) {
+            keyRow(row0, width: size.width, gap: gap, height: keyHeight, isCompact: false)
+            keyRow(row1, width: size.width, gap: gap, height: keyHeight, isCompact: false)
+            keyRow(row2, width: size.width, gap: gap, height: keyHeight, isCompact: false)
+            keyRow(row3, width: size.width, gap: gap, height: keyHeight, isCompact: false)
+            keyRow(row4, width: size.width, gap: gap, height: keyHeight, isCompact: false)
+            keyRow(row5, width: size.width, gap: gap, height: keyHeight, isCompact: false)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    }
+
+    // MARK: - Portrait Keyboard (scrollable comfortably-sized layout)
+
+    private func portraitKeyboard(size: CGSize) -> some View {
+        let keyHeight: CGFloat = 46
+        let rowWidth: CGFloat = max(size.width, 700)
+        let gap: CGFloat = 4
+
+        return ScrollView(.horizontal, showsIndicators: false) {
+            VStack(spacing: gap) {
+                keyRow(row0, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
+                keyRow(row1, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
+                keyRow(row2, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
+                keyRow(row3, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
+                keyRow(row4, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
+                keyRow(row5, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
+            }
+            .padding(.horizontal, 4)
+            .padding(.vertical, 2)
+        }
     }
 
     private func keyRow(_ keys: [FullKeyCap], width: CGFloat, gap: CGFloat, height: CGFloat, isCompact: Bool) -> some View {

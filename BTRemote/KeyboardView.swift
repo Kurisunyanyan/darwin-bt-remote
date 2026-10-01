@@ -44,7 +44,7 @@ struct KeyboardView: View {
     }
 
     private var pageSwitcher: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             ForEach(KeyboardPage.allCases) { page in
                 Button {
                     Haptics.tap()
@@ -52,14 +52,16 @@ struct KeyboardView: View {
                         selectedPage = page.rawValue
                     }
                 } label: {
-                    HStack(spacing: 5) {
+                    HStack(spacing: 4) {
                         Image(systemName: page.icon)
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 12, weight: .semibold))
                         Text(page.title)
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 12, weight: .semibold))
+                            .lineLimit(1)
+                            .fixedSize(horizontal: true, vertical: false)
                     }
                     .padding(.vertical, 6)
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 6)
                     .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
@@ -74,9 +76,9 @@ struct KeyboardView: View {
                 hid.toggleVirtualKeyboard()
             } label: {
                 Image(systemName: "keyboard.chevron.compact.down")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 13, weight: .semibold))
                     .padding(.vertical, 6)
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 8)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
                             .fill(groupFill)
@@ -86,7 +88,7 @@ struct KeyboardView: View {
             .buttonStyle(.plain)
             .accessibilityLabel("Toggle Onscreen Keyboard")
         }
-        .padding(.horizontal, 10)
+        .padding(.horizontal, 8)
         .padding(.top, 4)
     }
 
