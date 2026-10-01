@@ -27,39 +27,45 @@ struct FullKeyboardView: View {
         let keyHeight = min(52, max(28, availableHeight / totalRows))
 
         return VStack(spacing: gap) {
-            keyRow(row0, width: size.width, gap: gap, height: keyHeight, isCompact: false)
-            keyRow(row1, width: size.width, gap: gap, height: keyHeight, isCompact: false)
-            keyRow(row2, width: size.width, gap: gap, height: keyHeight, isCompact: false)
-            keyRow(row3, width: size.width, gap: gap, height: keyHeight, isCompact: false)
-            keyRow(row4, width: size.width, gap: gap, height: keyHeight, isCompact: false)
-            keyRow(row5, width: size.width, gap: gap, height: keyHeight, isCompact: false)
+            keyRow(row0, width: size.width, gap: gap, height: keyHeight, totalWeight: 15.0, isCompact: false)
+            keyRow(row1, width: size.width, gap: gap, height: keyHeight, totalWeight: 15.0, isCompact: false)
+            keyRow(row2, width: size.width, gap: gap, height: keyHeight, totalWeight: 15.0, isCompact: false)
+            keyRow(row3, width: size.width, gap: gap, height: keyHeight, totalWeight: 15.0, isCompact: false)
+            keyRow(row4, width: size.width, gap: gap, height: keyHeight, totalWeight: 15.0, isCompact: false)
+            keyRow(row5, width: size.width, gap: gap, height: keyHeight, totalWeight: 15.0, isCompact: false)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 
-    // MARK: - Portrait Keyboard (scrollable comfortably-sized layout)
+    // MARK: - Portrait Keyboard (8 rows non-scrollable native layout)
 
     private func portraitKeyboard(size: CGSize) -> some View {
-        let keyHeight: CGFloat = 46
-        let rowWidth: CGFloat = max(size.width, 700)
         let gap: CGFloat = 4
+        let totalRows: CGFloat = 8
+        let availableHeight = size.height - (totalRows - 1) * gap
+        let keyHeight = min(46, max(30, availableHeight / totalRows))
 
-        return ScrollView(.horizontal, showsIndicators: false) {
-            VStack(spacing: gap) {
-                keyRow(row0, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
-                keyRow(row1, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
-                keyRow(row2, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
-                keyRow(row3, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
-                keyRow(row4, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
-                keyRow(row5, width: rowWidth, gap: gap, height: keyHeight, isCompact: false)
-            }
-            .padding(.horizontal, 4)
-            .padding(.vertical, 2)
+        return VStack(spacing: gap) {
+            keyRow(pRow0, width: size.width, gap: gap, height: keyHeight, totalWeight: 10.0, isCompact: true)
+            keyRow(pRow1, width: size.width, gap: gap, height: keyHeight, totalWeight: 10.0, isCompact: true)
+            keyRow(pRow2, width: size.width, gap: gap, height: keyHeight, totalWeight: 10.0, isCompact: true)
+            keyRow(pRow3, width: size.width, gap: gap, height: keyHeight, totalWeight: 10.0, isCompact: true)
+            keyRow(pRow4, width: size.width, gap: gap, height: keyHeight, totalWeight: 9.0, isCompact: true)
+            keyRow(pRow5, width: size.width, gap: gap, height: keyHeight, totalWeight: 10.0, isCompact: true)
+            keyRow(pRow6, width: size.width, gap: gap, height: keyHeight, totalWeight: 10.0, isCompact: true)
+            keyRow(pRow7, width: size.width, gap: gap, height: keyHeight, totalWeight: 10.0, isCompact: true)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 
-    private func keyRow(_ keys: [FullKeyCap], width: CGFloat, gap: CGFloat, height: CGFloat, isCompact: Bool) -> some View {
-        let totalWeight: CGFloat = 15.0
+    private func keyRow(
+        _ keys: [FullKeyCap],
+        width: CGFloat,
+        gap: CGFloat,
+        height: CGFloat,
+        totalWeight: CGFloat,
+        isCompact: Bool
+    ) -> some View {
         let gaps = gap * CGFloat(max(keys.count - 1, 0))
         let unit = max(0, (width - gaps) / totalWeight)
 
@@ -190,32 +196,32 @@ private struct FullKeyCapButton: View {
         switch key.label {
         case let .text(str):
             Text(str)
-                .font(.system(size: isCompact ? 10 : 13, weight: .medium))
+                .font(.system(size: isCompact ? 11 : 13, weight: .medium))
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .minimumScaleFactor(0.6)
 
         case let .letter(char):
             Text(isShiftActive ? char.uppercased() : char.lowercased())
-                .font(.system(size: isCompact ? 12 : 16, weight: .semibold))
+                .font(.system(size: isCompact ? 16 : 17, weight: .semibold))
 
         case let .dual(top, bottom):
-            VStack(spacing: isCompact ? 0 : 2) {
+            VStack(spacing: 1) {
                 Text(top)
-                    .font(.system(size: isCompact ? 8 : 10, weight: isShiftActive ? .bold : .regular))
+                    .font(.system(size: isCompact ? 9 : 10, weight: isShiftActive ? .bold : .regular))
                     .foregroundColor(isArmed ? .white : (isShiftActive ? .primary : .secondary))
                 Text(bottom)
-                    .font(.system(size: isCompact ? 10 : 13, weight: isShiftActive ? .regular : .bold))
+                    .font(.system(size: isCompact ? 11 : 13, weight: isShiftActive ? .regular : .bold))
                     .foregroundColor(isArmed ? .white : (isShiftActive ? .secondary : .primary))
             }
 
         case let .symbol(sysName, fallback):
             if isCompact {
                 Image(systemName: sysName)
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 13, weight: .medium))
             } else {
                 HStack(spacing: 3) {
                     Image(systemName: sysName)
-                        .font(.system(size: 11, weight: .medium))
+                        .font(.system(size: 12, weight: .medium))
                     if !fallback.isEmpty {
                         Text(fallback)
                             .font(.system(size: 11, weight: .medium))
@@ -224,20 +230,22 @@ private struct FullKeyCapButton: View {
             }
 
         case .capsLock:
-            HStack(spacing: 3) {
+            HStack(spacing: 2) {
                 Circle()
                     .fill(isArmed ? Color.red : Color.secondary.opacity(0.4))
-                    .frame(width: isCompact ? 4 : 6, height: isCompact ? 4 : 6)
-                Text(isCompact ? "Caps" : "Caps Lock")
-                    .font(.system(size: isCompact ? 9 : 12, weight: .medium))
+                    .frame(width: isCompact ? 4 : 5, height: isCompact ? 4 : 5)
+                Text("Caps")
+                    .font(.system(size: isCompact ? 9 : 11, weight: .medium))
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.6)
             }
 
         case let .modifier(name, symbol, _):
             if isCompact {
-                Text(symbol.isEmpty ? name : symbol)
+                Text(name)
                     .font(.system(size: 10, weight: .medium))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             } else {
                 HStack(spacing: 2) {
                     if !symbol.isEmpty {
