@@ -108,7 +108,7 @@ extension HIDInput {
 
     static var unavailable: HIDInput {
         HIDInput(
-            sendMouse: { _ in }, sendKeyboard: { _ in }, sendConsumer: { _ in }, sendDigitizer: { classic.sendDigitizer($0) }, updateBattery: { _ in },
+            sendMouse: { _ in }, sendKeyboard: { _ in }, sendConsumer: { _ in }, sendDigitizer: { _ in }, updateBattery: { _ in },
             isActive: false, isConnected: false, activeError: nil, batteryLevel: 0
         )
     }
