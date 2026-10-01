@@ -3,16 +3,18 @@
     import UIKit
 
     /// 1-finger drag: moves
+    /// 1-finger double-tap drag: drags with left button down
     /// 1-finger tap: left-clicks
     /// 2-finger tap: right-clicks
     /// 2-finger drag: scrolls
     struct TouchpadView: UIViewRepresentable {
         var moveSensitivity: CGFloat
         var scrollSensitivity: CGFloat
-        var onMove: (Int8, Int8) -> Void
+        var onMove: (_ dx: Int8, _ dy: Int8, _ isDragging: Bool) -> Void
         var onScroll: (Int8) -> Void
         var onLeftClick: () -> Void
         var onRightClick: () -> Void
+        var onDragEnd: () -> Void
 
         func makeCoordinator() -> Coordinator {
             Coordinator()
@@ -54,25 +56,52 @@
             c.onScroll = onScroll
             c.onLeftClick = onLeftClick
             c.onRightClick = onRightClick
+            c.onDragEnd = onDragEnd
         }
 
         @MainActor
         final class Coordinator: NSObject, UIGestureRecognizerDelegate {
             var moveSensitivity: CGFloat = 1
             var scrollSensitivity: CGFloat = 1
-            var onMove: (Int8, Int8) -> Void = { _, _ in }
+            var onMove: (Int8, Int8, Bool) -> Void = { _, _, _ in }
             var onScroll: (Int8) -> Void = { _ in }
             var onLeftClick: () -> Void = {}
             var onRightClick: () -> Void = {}
+            var onDragEnd: () -> Void = {}
 
             private var scrollAccumulator: CGFloat = 0
             private let scrollStep: CGFloat = 6
 
+            private var lastTapTime: TimeInterval = 0
+            private var isDragging = false
+
             @objc func handleMove(_ pan: UIPanGestureRecognizer) {
                 guard let view = pan.view else { return }
-                let t = pan.translation(in: view)
-                onMove(HIDInput.clamp(t.x * moveSensitivity), HIDInput.clamp(t.y * moveSensitivity))
-                pan.setTranslation(.zero, in: view)
+                switch pan.state {
+                case .began:
+                    let now = CACurrentMediaTime()
+                    if now - lastTapTime < 0.35 {
+                        isDragging = true
+                        lastTapTime = 0
+                        Haptics.tap()
+                        onMove(0, 0, true)
+                    }
+                case .changed:
+                    let t = pan.translation(in: view)
+                    let dx = HIDInput.clamp(t.x * moveSensitivity)
+                    let dy = HIDInput.clamp(t.y * moveSensitivity)
+                    if dx != 0 || dy != 0 {
+                        onMove(dx, dy, isDragging)
+                        pan.setTranslation(.zero, in: view)
+                    }
+                case .ended, .cancelled:
+                    if isDragging {
+                        isDragging = false
+                        onDragEnd()
+                    }
+                default:
+                    break
+                }
             }
 
             @objc func handleScroll(_ pan: UIPanGestureRecognizer) {
@@ -89,10 +118,13 @@
             }
 
             @objc func handleLeft() {
+                lastTapTime = CACurrentMediaTime()
                 onLeftClick()
             }
 
             @objc func handleRight() {
+                lastTapTime = 0
+                isDragging = false
                 onRightClick()
             }
 

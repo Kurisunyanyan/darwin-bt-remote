@@ -5,6 +5,7 @@ struct TrackpadPanel: View {
 
     @AppStorage(AppSettings.touchpadSensitivityKey) private var touchpadSensitivity = AppSettings.defaultPointerSensitivity
     @AppStorage(AppSettings.scrollSensitivityKey) private var scrollSensitivity = AppSettings.defaultScrollSensitivity
+    @State private var activeButtons: MouseButtons = []
     #if os(macOS)
         @State private var dragOffset: CGSize = .zero
     #endif
@@ -27,10 +28,19 @@ struct TrackpadPanel: View {
                 TouchpadView(
                     moveSensitivity: touchpadSensitivity,
                     scrollSensitivity: scrollSensitivity,
-                    onMove: { hid.move(dx: $0, dy: $1) },
+                    onMove: { dx, dy, isDragging in
+                        var buttons = activeButtons
+                        if isDragging {
+                            buttons.insert(.left)
+                        }
+                        hid.sendMouse(MouseReport(buttons: buttons, dX: dx, dY: dy))
+                    },
                     onScroll: { hid.scroll($0) },
                     onLeftClick: { Haptics.tap(); hid.click(.left) },
-                    onRightClick: { Haptics.tap(); hid.click(.right) }
+                    onRightClick: { Haptics.tap(); hid.click(.right) },
+                    onDragEnd: {
+                        hid.sendMouse(MouseReport(buttons: activeButtons))
+                    }
                 )
             #endif
         }
@@ -43,11 +53,11 @@ struct TrackpadPanel: View {
                         let dx = HIDInput.clamp((value.translation.width - dragOffset.width) * touchpadSensitivity)
                         let dy = HIDInput.clamp((value.translation.height - dragOffset.height) * touchpadSensitivity)
                         dragOffset = value.translation
-                        hid.move(dx: dx, dy: dy)
+                        hid.sendMouse(MouseReport(buttons: activeButtons, dX: dx, dY: dy))
                     }
                     .onEnded { _ in
                         dragOffset = .zero
-                        hid.sendMouse(.zero)
+                        hid.sendMouse(MouseReport(buttons: activeButtons))
                     }
             )
         #endif
@@ -74,8 +84,14 @@ struct TrackpadPanel: View {
 
     private func mouseButton(_ button: MouseButtons, _ label: LocalizedStringKey) -> some View {
         HoldButton(
-            onPress: { hid.sendMouse(MouseReport(buttons: button)) },
-            onRelease: { hid.sendMouse(.zero) },
+            onPress: {
+                activeButtons.insert(button)
+                hid.sendMouse(MouseReport(buttons: activeButtons))
+            },
+            onRelease: {
+                activeButtons.remove(button)
+                hid.sendMouse(MouseReport(buttons: activeButtons))
+            },
             background: { RoundedRectangle(cornerRadius: 12).fill(groupFill) },
             label: { Color.clear }
         )

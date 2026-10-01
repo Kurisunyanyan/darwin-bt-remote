@@ -43,8 +43,8 @@ struct HIDInput {
         sendMouse(.zero)
     }
 
-    func move(dx: Int8, dy: Int8) {
-        sendMouse(MouseReport(dX: dx, dY: dy))
+    func move(dx: Int8, dy: Int8, buttons: MouseButtons = []) {
+        sendMouse(MouseReport(buttons: buttons, dX: dx, dY: dy))
     }
 
     func scroll(_ wheel: Int8) {
