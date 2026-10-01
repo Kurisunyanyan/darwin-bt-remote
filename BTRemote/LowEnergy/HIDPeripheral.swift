@@ -286,10 +286,7 @@ final class HIDPeripheral: NSObject, ObservableObject {
             )
         ]
 
-        // report characteristic order matters
-        let systemReportChar = makeReportChar(.systemControl, type: .input)
-        let consumerReportChar = makeReportChar(.consumerControl, type: .input)
-        let mouseReportChar = makeReportChar(.mouse, type: .input)
+        // report characteristic order matters: keyboard first establishes keyboard primary identity
         let keyboardReportChar = makeReportChar(.keyboard, type: .input)
         let outputReportChar = CBMutableCharacteristic(
             type: HIDProfile.report,
@@ -303,20 +300,23 @@ final class HIDPeripheral: NSObject, ObservableObject {
                 value: NSData(data: ReportID.keyboardLEDs.descriptor(.output))
             )
         ]
+        let mouseReportChar = makeReportChar(.mouse, type: .input)
+        let systemReportChar = makeReportChar(.systemControl, type: .input)
+        let consumerReportChar = makeReportChar(.consumerControl, type: .input)
 
         service.characteristics = [
             controlPoint,
             protocolMode,
             hidInfo,
-            bootMouseInput,
             bootKbdInput,
             bootKbdOutput,
+            bootMouseInput,
             reportMap,
-            systemReportChar,
-            consumerReportChar,
-            mouseReportChar,
             keyboardReportChar,
-            outputReportChar
+            outputReportChar,
+            mouseReportChar,
+            systemReportChar,
+            consumerReportChar
         ]
 
         bootMouseInputChar = bootMouseInput

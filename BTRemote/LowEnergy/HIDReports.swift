@@ -160,6 +160,7 @@ enum ConsumerKey: UInt16, Sendable, Equatable {
     case channelUp = 0x009C
     case channelDown = 0x009D
     case closedCaption = 0x0061
+    case eject = 0x00B8
     case menu = 0x0040
     case menuPick = 0x0041
     case menuUp = 0x0042
@@ -172,4 +173,6 @@ enum ConsumerKey: UInt16, Sendable, Equatable {
 extension ConsumerReport {
     static let acHome = ConsumerReport(acUsageB: 0x23)
     static let acBack = ConsumerReport(acUsageB: 0x24)
+    static let eject = ConsumerReport(key: .eject)
+    static let keyboardLayout = ConsumerReport(acUsageB: 0x2D)
 }

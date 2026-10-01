@@ -34,6 +34,10 @@ struct HIDInput {
         sendConsumer(.zero)
     }
 
+    func toggleVirtualKeyboard() {
+        tap(consumer: .eject)
+    }
+
     func click(_ button: MouseButtons) {
         sendMouse(MouseReport(buttons: button))
         sendMouse(.zero)

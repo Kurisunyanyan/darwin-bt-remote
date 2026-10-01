@@ -68,35 +68,6 @@ extension ReportID {
 /// 239-byte HID report map
 extension HIDProfile {
     static let reportMapData = Data([
-        // mouse, Report ID 1 (52 bytes)
-        0x05, 0x01, // Usage Page (Generic Desktop)
-        0x09, 0x02, // Usage (Mouse)
-        0xA1, 0x01, // Collection (Application)
-        0x85, 0x01, //   Report ID (1)
-        0x09, 0x01, //   Usage (Pointer)
-        0xA1, 0x00, //   Collection (Physical)
-        0x05, 0x09, //     Usage Page (Button)
-        0x19, 0x01, //     Usage Min (1)
-        0x29, 0x03, //     Usage Max (3)
-        0x75, 0x01, //     Report Size (1)
-        0x95, 0x03, //     Report Count (3)
-        0x15, 0x00, //     Logical Min (0)
-        0x25, 0x01, //     Logical Max (1)
-        0x81, 0x02, //     Input (Data,Var,Abs)
-        0x95, 0x05, //     Report Count (5)
-        0x81, 0x03, //     Input (Const,Var,Abs) padding
-        0x05, 0x01, //     Usage Page (Generic Desktop)
-        0x09, 0x30, //     Usage (X)
-        0x09, 0x31, //     Usage (Y)
-        0x09, 0x38, //     Usage (Wheel)
-        0x75, 0x08, //     Report Size (8)
-        0x95, 0x03, //     Report Count (3)
-        0x15, 0x81, //     Logical Min (-127)
-        0x25, 0x7F, //     Logical Max (127)
-        0x81, 0x06, //     Input (Data,Var,Rel)
-        0xC0, //   End Collection
-        0xC0, // End Collection
-
         // keyboard input + LED output, Report IDs 2 and 3 (61 bytes)
         0x05, 0x01, // Usage Page (Generic Desktop)
         0x09, 0x06, // Usage (Keyboard)
@@ -128,6 +99,35 @@ extension HIDProfile {
         0x91, 0x02, //   Output (Data,Var,Abs): 5 LED bits
         0x95, 0x03, //   Report Count (3)
         0x91, 0x03, //   Output (Const,Var,Abs): LED padding
+        0xC0, // End Collection
+
+        // mouse, Report ID 1 (52 bytes)
+        0x05, 0x01, // Usage Page (Generic Desktop)
+        0x09, 0x02, // Usage (Mouse)
+        0xA1, 0x01, // Collection (Application)
+        0x85, 0x01, //   Report ID (1)
+        0x09, 0x01, //   Usage (Pointer)
+        0xA1, 0x00, //   Collection (Physical)
+        0x05, 0x09, //     Usage Page (Button)
+        0x19, 0x01, //     Usage Min (1)
+        0x29, 0x03, //     Usage Max (3)
+        0x75, 0x01, //     Report Size (1)
+        0x95, 0x03, //     Report Count (3)
+        0x15, 0x00, //     Logical Min (0)
+        0x25, 0x01, //     Logical Max (1)
+        0x81, 0x02, //     Input (Data,Var,Abs)
+        0x95, 0x05, //     Report Count (5)
+        0x81, 0x03, //     Input (Const,Var,Abs) padding
+        0x05, 0x01, //     Usage Page (Generic Desktop)
+        0x09, 0x30, //     Usage (X)
+        0x09, 0x31, //     Usage (Y)
+        0x09, 0x38, //     Usage (Wheel)
+        0x75, 0x08, //     Report Size (8)
+        0x95, 0x03, //     Report Count (3)
+        0x15, 0x81, //     Logical Min (-127)
+        0x25, 0x7F, //     Logical Max (127)
+        0x81, 0x06, //     Input (Data,Var,Rel)
+        0xC0, //   End Collection
         0xC0, // End Collection
 
         // battery via HID, Report ID 4 (23 bytes)

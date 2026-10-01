@@ -69,6 +69,22 @@ struct KeyboardView: View {
                 }
                 .buttonStyle(.plain)
             }
+            Button {
+                Haptics.tap()
+                hid.toggleVirtualKeyboard()
+            } label: {
+                Image(systemName: "keyboard.chevron.compact.down")
+                    .font(.system(size: 14, weight: .semibold))
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(groupFill)
+                    )
+                    .foregroundColor(.primary)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Toggle Onscreen Keyboard")
         }
         .padding(.horizontal, 10)
         .padding(.top, 4)
