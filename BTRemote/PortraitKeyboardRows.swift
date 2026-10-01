@@ -84,7 +84,7 @@ extension FullKeyboardView {
             FullKeyCap(.letter("B"), weight: 1.0, "B", .key(.b)),
             FullKeyCap(.letter("N"), weight: 1.0, "N", .key(.n)),
             FullKeyCap(.letter("M"), weight: 1.0, "M", .key(.m)),
-            FullKeyCap(.symbol("delete.left", "⌫"), weight: 1.55, L10n.Keyboard.backspace, .key(.backspace))
+            FullKeyCap(.symbol("delete.left", ""), weight: 1.55, L10n.Keyboard.backspace, .key(.backspace))
         ]
     }
 
@@ -112,10 +112,10 @@ extension FullKeyboardView {
             FullKeyCap(.capsLock, weight: 1.0, L10n.Keyboard.capsLock, .capsLock),
             FullKeyCap(.text("Space"), weight: 2.2, L10n.Keyboard.space, .key(.space)),
             FullKeyCap(.symbol("return", "Enter"), weight: 1.4, L10n.Keyboard.enter, .key(.return)),
-            FullKeyCap(.symbol("arrow.left", "←"), weight: 0.6, L10n.Keyboard.left, .key(.leftArrow)),
-            FullKeyCap(.symbol("arrow.up", "↑"), weight: 0.6, L10n.Keyboard.up, .key(.upArrow)),
-            FullKeyCap(.symbol("arrow.down", "↓"), weight: 0.6, L10n.Keyboard.down, .key(.downArrow)),
-            FullKeyCap(.symbol("arrow.right", "→"), weight: 0.6, L10n.Keyboard.right, .key(.rightArrow))
+            FullKeyCap(.symbol("arrow.left", ""), weight: 0.6, L10n.Keyboard.left, .key(.leftArrow)),
+            FullKeyCap(.symbol("arrow.up", ""), weight: 0.6, L10n.Keyboard.up, .key(.upArrow)),
+            FullKeyCap(.symbol("arrow.down", ""), weight: 0.6, L10n.Keyboard.down, .key(.downArrow)),
+            FullKeyCap(.symbol("arrow.right", ""), weight: 0.6, L10n.Keyboard.right, .key(.rightArrow))
         ]
     }
 }

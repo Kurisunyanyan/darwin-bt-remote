@@ -7,6 +7,8 @@ struct SettingsView: View {
     @State private var showReset = false
     @AppStorage(AppSettings.touchpadSensitivityKey) private var touchpadSensitivity = AppSettings.defaultPointerSensitivity
     @AppStorage(AppSettings.scrollSensitivityKey) private var scrollSensitivity = AppSettings.defaultScrollSensitivity
+    @AppStorage(AppSettings.naturalScrollKey) private var naturalScroll = true
+    @AppStorage(AppSettings.precisionTouchpadKey) private var precisionTouchpad = false
     @AppStorage(AppSettings.developerModeKey) private var developerMode = false
     @AppStorage(AppSettings.useServiceChangedKey) private var forceServiceChanged = true
     @AppStorage(AppSettings.hasSeenWelcomeKey) private var hasSeenWelcome = false
@@ -34,6 +36,8 @@ struct SettingsView: View {
             Section(header: Text(L10n.Settings.trackpad)) {
                 sensitivityRow(L10n.Settings.trackingSpeed, value: $touchpadSensitivity, range: AppSettings.pointerSensitivityRange)
                 sensitivityRow(L10n.Settings.scrollSpeed, value: $scrollSensitivity, range: AppSettings.scrollSensitivityRange)
+                Toggle(L10n.Settings.naturalScroll, isOn: $naturalScroll)
+                Toggle(L10n.Settings.precisionTouchpad, isOn: $precisionTouchpad)
             }
             #if os(iOS)
                 Section(header: Text(L10n.Settings.connection), footer: Text(L10n.Settings.autoAdvertiseHint)) {

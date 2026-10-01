@@ -11,6 +11,8 @@ enum AppSettings {
     static let liveTypingKey = "BTRemote.liveTyping"
     static let remoteModeKey = "BTRemote.remoteMode"
     static let advertisedNameKey = "BTRemote.advertisedName"
+    static let precisionTouchpadKey = "BTRemote.precisionTouchpad"
+    static let naturalScrollKey = "BTRemote.naturalScroll"
 
     static let maxAdvertisedNameLength = 26
 

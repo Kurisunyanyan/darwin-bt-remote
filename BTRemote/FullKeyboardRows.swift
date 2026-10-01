@@ -38,7 +38,7 @@ extension FullKeyboardView {
             FullKeyCap(.dual(top: ")", bottom: "0"), weight: 1.0, "0", .key(.digit0)),
             FullKeyCap(.dual(top: "_", bottom: "-"), weight: 1.0, "-", .key(.minus)),
             FullKeyCap(.dual(top: "+", bottom: "="), weight: 1.0, "=", .key(.equal)),
-            FullKeyCap(.symbol("delete.left", "⌫"), weight: 2.0, L10n.Keyboard.backspace, .key(.backspace))
+            FullKeyCap(.symbol("delete.left", ""), weight: 2.0, L10n.Keyboard.backspace, .key(.backspace))
         ]
     }
 
@@ -92,7 +92,7 @@ extension FullKeyboardView {
             FullKeyCap(.dual(top: "<", bottom: ","), weight: 1.0, ",", .key(.comma)),
             FullKeyCap(.dual(top: ">", bottom: "."), weight: 1.0, ".", .key(.period)),
             FullKeyCap(.dual(top: "?", bottom: "/"), weight: 1.0, "/", .key(.slash)),
-            FullKeyCap(.symbol("arrow.up", "↑"), weight: 1.0, L10n.Keyboard.up, .key(.upArrow)),
+            FullKeyCap(.symbol("arrow.up", ""), weight: 1.0, L10n.Keyboard.up, .key(.upArrow)),
             FullKeyCap(.modifier(name: "Shift", symbol: "⇧", mod: .rightShift), weight: 1.9, L10n.Keyboard.shift, .modifier(.rightShift))
         ]
     }
@@ -105,9 +105,9 @@ extension FullKeyboardView {
             FullKeyCap(.text("Space"), weight: 5.3, L10n.Keyboard.space, .key(.space)),
             FullKeyCap(.modifier(name: "Opt", symbol: "⌥", mod: .rightAlt), weight: 1.2, L10n.Keyboard.alt, .modifier(.rightAlt)),
             FullKeyCap(.modifier(name: "Ctrl", symbol: "⌃", mod: .rightCtrl), weight: 1.3, L10n.Keyboard.ctrl, .modifier(.rightCtrl)),
-            FullKeyCap(.symbol("arrow.left", "←"), weight: 1.16, L10n.Keyboard.left, .key(.leftArrow)),
-            FullKeyCap(.symbol("arrow.down", "↓"), weight: 1.16, L10n.Keyboard.down, .key(.downArrow)),
-            FullKeyCap(.symbol("arrow.right", "→"), weight: 1.18, L10n.Keyboard.right, .key(.rightArrow))
+            FullKeyCap(.symbol("arrow.left", ""), weight: 1.16, L10n.Keyboard.left, .key(.leftArrow)),
+            FullKeyCap(.symbol("arrow.down", ""), weight: 1.16, L10n.Keyboard.down, .key(.downArrow)),
+            FullKeyCap(.symbol("arrow.right", ""), weight: 1.18, L10n.Keyboard.right, .key(.rightArrow))
         ]
     }
 }

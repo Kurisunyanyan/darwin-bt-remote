@@ -5,6 +5,8 @@ struct TrackpadPanel: View {
 
     @AppStorage(AppSettings.touchpadSensitivityKey) private var touchpadSensitivity = AppSettings.defaultPointerSensitivity
     @AppStorage(AppSettings.scrollSensitivityKey) private var scrollSensitivity = AppSettings.defaultScrollSensitivity
+    @AppStorage(AppSettings.precisionTouchpadKey) private var precisionTouchpad = false
+    @AppStorage(AppSettings.naturalScrollKey) private var naturalScroll = true
     @State private var activeButtons: MouseButtons = []
     #if os(macOS)
         @State private var dragOffset: CGSize = .zero
@@ -26,6 +28,8 @@ struct TrackpadPanel: View {
             RoundedRectangle(cornerRadius: 12).fill(groupFill)
             #if os(iOS)
                 TouchpadView(
+                    precisionMode: precisionTouchpad,
+                    naturalScroll: naturalScroll,
                     moveSensitivity: touchpadSensitivity,
                     scrollSensitivity: scrollSensitivity,
                     onMove: { dx, dy, isDragging in
@@ -40,6 +44,13 @@ struct TrackpadPanel: View {
                     onRightClick: { Haptics.tap(); hid.click(.right) },
                     onDragEnd: {
                         hid.sendMouse(MouseReport(buttons: activeButtons))
+                    },
+                    onDigitizer: { report in
+                        var rep = report
+                        if activeButtons.contains(.left) {
+                            rep.button = true
+                        }
+                        hid.sendDigitizer(rep)
                     }
                 )
             #endif

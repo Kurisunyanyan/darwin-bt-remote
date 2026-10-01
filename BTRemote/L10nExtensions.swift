@@ -174,6 +174,14 @@ extension L10n {
             "settings.scroll_speed"
         }
 
+        static var precisionTouchpad: LocalizedStringKey {
+            "settings.precision_touchpad"
+        }
+
+        static var naturalScroll: LocalizedStringKey {
+            "settings.natural_scroll"
+        }
+
         static var connection: LocalizedStringKey {
             "settings.connection"
         }

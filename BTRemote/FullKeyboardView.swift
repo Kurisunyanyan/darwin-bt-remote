@@ -215,17 +215,15 @@ private struct FullKeyCapButton: View {
             }
 
         case let .symbol(sysName, fallback):
-            if isCompact {
+            if fallback.isEmpty {
                 Image(systemName: sysName)
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.system(size: isCompact ? 13 : 15, weight: .medium))
             } else {
                 HStack(spacing: 3) {
                     Image(systemName: sysName)
-                        .font(.system(size: 12, weight: .medium))
-                    if !fallback.isEmpty {
-                        Text(fallback)
-                            .font(.system(size: 11, weight: .medium))
-                    }
+                        .font(.system(size: isCompact ? 11 : 13, weight: .medium))
+                    Text(fallback)
+                        .font(.system(size: isCompact ? 10 : 12, weight: .medium))
                 }
             }
 

@@ -2222,6 +2222,28 @@
           }
         }
       }
+    },
+    "settings.precision_touchpad": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Precision Touchpad"
+          }
+        }
+      }
+    },
+    "settings.natural_scroll": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Natural Scrolling"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

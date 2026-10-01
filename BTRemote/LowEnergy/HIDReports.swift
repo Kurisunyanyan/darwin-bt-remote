@@ -1,5 +1,52 @@
 import Foundation
 
+struct DigitizerContact: Sendable, Equatable {
+    var tipSwitch: Bool = false
+    var confidence: Bool = true
+    var id: UInt8 = 0
+    var x: UInt16 = 0
+    var y: UInt16 = 0
+}
+
+struct DigitizerReport: Sendable, Equatable {
+    var button: Bool = false
+    var contact1 = DigitizerContact()
+    var contact2 = DigitizerContact()
+    var contactCount: UInt8 = 0
+
+    static let zero = DigitizerReport()
+
+    var data: Data {
+        var bytes = [UInt8](repeating: 0, count: 14)
+        bytes[0] = button ? 1 : 0
+
+        // Contact 1
+        var c1Flags: UInt8 = 0
+        if contact1.tipSwitch { c1Flags |= 1 }
+        if contact1.confidence { c1Flags |= 2 }
+        bytes[1] = c1Flags
+        bytes[2] = contact1.id
+        bytes[3] = UInt8(contact1.x & 0xFF)
+        bytes[4] = UInt8((contact1.x >> 8) & 0xFF)
+        bytes[5] = UInt8(contact1.y & 0xFF)
+        bytes[6] = UInt8((contact1.y >> 8) & 0xFF)
+
+        // Contact 2
+        var c2Flags: UInt8 = 0
+        if contact2.tipSwitch { c2Flags |= 1 }
+        if contact2.confidence { c2Flags |= 2 }
+        bytes[7] = c2Flags
+        bytes[8] = contact2.id
+        bytes[9] = UInt8(contact2.x & 0xFF)
+        bytes[10] = UInt8((contact2.x >> 8) & 0xFF)
+        bytes[11] = UInt8(contact2.y & 0xFF)
+        bytes[12] = UInt8((contact2.y >> 8) & 0xFF)
+
+        bytes[13] = contactCount
+        return Data(bytes)
+    }
+}
+
 struct MouseReport: Sendable, Equatable {
     var buttons: MouseButtons = []
     var dX: Int8 = 0

@@ -44,7 +44,8 @@ final class HIDPeripheral: NSObject, ObservableObject {
         ReportID.mouse.rawValue: MouseReport.zero.data,
         ReportID.keyboard.rawValue: KeyboardReport.zero.data,
         ReportID.systemControl.rawValue: SystemControlReport.zero.data,
-        ReportID.consumerControl.rawValue: ConsumerReport.zero.data
+        ReportID.consumerControl.rawValue: ConsumerReport.zero.data,
+        ReportID.digitizer.rawValue: DigitizerReport.zero.data
     ]
 
     private var pendingBroadcast: (Data, CBMutableCharacteristic)?
@@ -103,6 +104,10 @@ final class HIDPeripheral: NSObject, ObservableObject {
 
     func sendMouse(_ report: MouseReport) {
         broadcast(report.data, reportID: .mouse)
+    }
+
+    func sendDigitizer(_ report: DigitizerReport) {
+        broadcast(report.data, reportID: .digitizer)
     }
 
     func sendKeyboard(_ report: KeyboardReport) {
@@ -303,6 +308,7 @@ final class HIDPeripheral: NSObject, ObservableObject {
         let mouseReportChar = makeReportChar(.mouse, type: .input)
         let systemReportChar = makeReportChar(.systemControl, type: .input)
         let consumerReportChar = makeReportChar(.consumerControl, type: .input)
+        let digitizerReportChar = makeReportChar(.digitizer, type: .input)
 
         service.characteristics = [
             controlPoint,
@@ -316,7 +322,8 @@ final class HIDPeripheral: NSObject, ObservableObject {
             outputReportChar,
             mouseReportChar,
             systemReportChar,
-            consumerReportChar
+            consumerReportChar,
+            digitizerReportChar
         ]
 
         bootMouseInputChar = bootMouseInput
@@ -327,6 +334,7 @@ final class HIDPeripheral: NSObject, ObservableObject {
         charsByReportID[ReportID.mouse.rawValue] = mouseReportChar
         charsByReportID[ReportID.keyboard.rawValue] = keyboardReportChar
         charsByReportID[ReportID.keyboardLEDs.rawValue] = outputReportChar
+        charsByReportID[ReportID.digitizer.rawValue] = digitizerReportChar
 
         return service
     }

@@ -33,7 +33,8 @@
             ReportID.mouse.rawValue: MouseReport.zero.data,
             ReportID.keyboard.rawValue: KeyboardReport.zero.data,
             ReportID.systemControl.rawValue: SystemControlReport.zero.data,
-            ReportID.consumerControl.rawValue: ConsumerReport.zero.data
+            ReportID.consumerControl.rawValue: ConsumerReport.zero.data,
+            ReportID.digitizer.rawValue: DigitizerReport.zero.data
         ]
         /// SET_PROTOCOL mode: 0x00 boot, 0x01 report
         private var protocolMode: UInt8 = 0x01
@@ -235,6 +236,10 @@
 
         func sendMouse(_ report: MouseReport) {
             _sendInputReport(.mouse, payload: report.data)
+        }
+
+        func sendDigitizer(_ report: DigitizerReport) {
+            _sendInputReport(.digitizer, payload: report.data)
         }
 
         func sendKeyboard(_ report: KeyboardReport) {
