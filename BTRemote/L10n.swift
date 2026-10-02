@@ -377,7 +377,9 @@ extension L10n {
         static var classic: LocalizedStringKey {
             "keyboard.classic"
         }
-        enum Gesture {
+    }
+
+    enum Gesture {
         static var sectionTitle: LocalizedStringKey {
             "gesture.section_title"
         }
@@ -445,8 +447,6 @@ extension L10n {
             "gesture.action_zoom"
         }
     }
-
-}
 
     enum DirectInput {
         static var section: LocalizedStringKey {
