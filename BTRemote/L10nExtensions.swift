@@ -162,6 +162,22 @@ extension L10n {
     }
 
     enum Settings {
+        static var appearance: LocalizedStringKey {
+            "settings.appearance"
+        }
+
+        static var themeSystem: LocalizedStringKey {
+            "settings.theme.system"
+        }
+
+        static var themeLight: LocalizedStringKey {
+            "settings.theme.light"
+        }
+
+        static var themeDark: LocalizedStringKey {
+            "settings.theme.dark"
+        }
+
         static var trackpad: LocalizedStringKey {
             "settings.trackpad"
         }

@@ -5,6 +5,7 @@ struct SettingsView: View {
     @EnvironmentObject private var names: DeviceNameStore
     @Environment(\.hid) private var hid
     @State private var showReset = false
+    @AppStorage(AppSettings.colorSchemeKey) private var selectedTheme = "system"
     @AppStorage(AppSettings.touchpadSensitivityKey) private var touchpadSensitivity = AppSettings.defaultPointerSensitivity
     @AppStorage(AppSettings.scrollSensitivityKey) private var scrollSensitivity = AppSettings.defaultScrollSensitivity
     @AppStorage(AppSettings.developerModeKey) private var developerMode = false
@@ -31,6 +32,14 @@ struct SettingsView: View {
 
     private var form: some View {
         Form {
+            Section(header: Text(L10n.Settings.appearance)) {
+                Picker(L10n.Settings.appearance, selection: $selectedTheme) {
+                    Text(L10n.Settings.themeSystem).tag("system")
+                    Text(L10n.Settings.themeLight).tag("light")
+                    Text(L10n.Settings.themeDark).tag("dark")
+                }
+                .pickerStyle(.segmented)
+            }
             Section(header: Text(L10n.Settings.trackpad)) {
                 sensitivityRow(L10n.Settings.trackingSpeed, value: $touchpadSensitivity, range: AppSettings.pointerSensitivityRange)
                 sensitivityRow(L10n.Settings.scrollSpeed, value: $scrollSensitivity, range: AppSettings.scrollSensitivityRange)

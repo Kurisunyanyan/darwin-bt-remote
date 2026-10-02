@@ -23,6 +23,15 @@ struct BTRemoteApp: App {
     #endif
 
     @StateObject private var deviceNames = DeviceNameStore()
+    @AppStorage(AppSettings.colorSchemeKey) private var selectedTheme = "system"
+
+    private var preferredColorScheme: ColorScheme? {
+        switch selectedTheme {
+        case "light": return .light
+        case "dark": return .dark
+        default: return nil
+        }
+    }
 
     init() {
         UserDefaults.standard.register(defaults: [AppSettings.useServiceChangedKey: true])
@@ -44,6 +53,7 @@ struct BTRemoteApp: App {
                     .environmentObject(central)
                     .environmentObject(deviceNames)
                     .environment(\.hid, hid)
+                    .preferredColorScheme(preferredColorScheme)
                     .onAppear {
                         central.start()
                         if autoAdvertise { lowEnergy.start() }
@@ -56,6 +66,7 @@ struct BTRemoteApp: App {
                     .environmentObject(deviceNames)
                     .environment(\.macTransport, currentMode)
                     .environment(\.hid, hid)
+                    .preferredColorScheme(preferredColorScheme)
                     .onAppear { _onAppear() }
                     .onChange(of: modeRaw) { _ in _modeChanged() }
             #endif
