@@ -2486,6 +2486,105 @@
           }
         }
       }
+    },
+    "gesture.rotation": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Two-Finger Rotation (Rotate)"
+          }
+        }
+      }
+    },
+    "gesture.four_finger_section_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Four-Finger Gestures"
+          }
+        }
+      }
+    },
+    "gesture.four_finger_swipe_up": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Four-Finger Swipe Up"
+          }
+        }
+      }
+    },
+    "gesture.four_finger_swipe_down": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Four-Finger Swipe Down"
+          }
+        }
+      }
+    },
+    "gesture.four_finger_swipe_left": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Four-Finger Swipe Left"
+          }
+        }
+      }
+    },
+    "gesture.four_finger_swipe_right": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Four-Finger Swipe Right"
+          }
+        }
+      }
+    },
+    "gesture.four_finger_tap": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Four-Finger Tap"
+          }
+        }
+      }
+    },
+    "gesture.action_rotate_left": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rotate Counterclockwise (Cmd+L / Left)"
+          }
+        }
+      }
+    },
+    "gesture.action_rotate_right": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rotate Clockwise (Cmd+R)"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

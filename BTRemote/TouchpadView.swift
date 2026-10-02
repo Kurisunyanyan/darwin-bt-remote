@@ -7,9 +7,12 @@
     /// 1-finger tap: left-clicks
     /// 2-finger tap: right-clicks
     /// 2-finger drag: scrolls (supports direction inversion)
-    /// 2-finger pinch: zoom or mapped action
+    /// 2-finger pinch: zoom (in/out)
+    /// 2-finger rotation: rotate gesture
     /// 3-finger swipe: up, down, left, right mapped actions
     /// 3-finger tap: mapped action
+    /// 4-finger swipe: up, down, left, right mapped actions
+    /// 4-finger tap: mapped action
     struct TouchpadView: UIViewRepresentable {
         var moveSensitivity: CGFloat
         var scrollSensitivity: CGFloat
@@ -21,6 +24,7 @@
         var onDragEnd: () -> Void
         var onGestureAction: (TrackpadGestureAction) -> Void
         var onZoom: (CGFloat) -> Void
+        var onRotate: (CGFloat) -> Void
 
         func makeCoordinator() -> Coordinator {
             Coordinator()
@@ -45,6 +49,9 @@
             let pinch = UIPinchGestureRecognizer(target: c, action: #selector(Coordinator.handlePinch(_:)))
             pinch.delegate = c
 
+            let rotation = UIRotationGestureRecognizer(target: c, action: #selector(Coordinator.handleRotation(_:)))
+            rotation.delegate = c
+
             let left = UITapGestureRecognizer(target: c, action: #selector(Coordinator.handleLeft))
             left.numberOfTouchesRequired = 1
             left.delegate = c
@@ -56,6 +63,10 @@
             let threeTap = UITapGestureRecognizer(target: c, action: #selector(Coordinator.handleThreeFingerTap))
             threeTap.numberOfTouchesRequired = 3
             threeTap.delegate = c
+
+            let fourTap = UITapGestureRecognizer(target: c, action: #selector(Coordinator.handleFourFingerTap))
+            fourTap.numberOfTouchesRequired = 4
+            fourTap.delegate = c
 
             let swipeUp = UISwipeGestureRecognizer(target: c, action: #selector(Coordinator.handleSwipeUp))
             swipeUp.numberOfTouchesRequired = 3
@@ -77,7 +88,29 @@
             swipeRight.direction = .right
             swipeRight.delegate = c
 
-            [move, scroll, pinch, left, right, threeTap, swipeUp, swipeDown, swipeLeft, swipeRight]
+            let fourSwipeUp = UISwipeGestureRecognizer(target: c, action: #selector(Coordinator.handleFourSwipeUp))
+            fourSwipeUp.numberOfTouchesRequired = 4
+            fourSwipeUp.direction = .up
+            fourSwipeUp.delegate = c
+
+            let fourSwipeDown = UISwipeGestureRecognizer(target: c, action: #selector(Coordinator.handleFourSwipeDown))
+            fourSwipeDown.numberOfTouchesRequired = 4
+            fourSwipeDown.direction = .down
+            fourSwipeDown.delegate = c
+
+            let fourSwipeLeft = UISwipeGestureRecognizer(target: c, action: #selector(Coordinator.handleFourSwipeLeft))
+            fourSwipeLeft.numberOfTouchesRequired = 4
+            fourSwipeLeft.direction = .left
+            fourSwipeLeft.delegate = c
+
+            let fourSwipeRight = UISwipeGestureRecognizer(target: c, action: #selector(Coordinator.handleFourSwipeRight))
+            fourSwipeRight.numberOfTouchesRequired = 4
+            fourSwipeRight.direction = .right
+            fourSwipeRight.delegate = c
+
+            [move, scroll, pinch, rotation, left, right, threeTap, fourTap,
+             swipeUp, swipeDown, swipeLeft, swipeRight,
+             fourSwipeUp, fourSwipeDown, fourSwipeLeft, fourSwipeRight]
                 .forEach { view.addGestureRecognizer($0) }
 
             return view
@@ -95,6 +128,7 @@
             c.onDragEnd = onDragEnd
             c.onGestureAction = onGestureAction
             c.onZoom = onZoom
+            c.onRotate = onRotate
         }
 
         @MainActor
@@ -109,11 +143,13 @@
             var onDragEnd: () -> Void = {}
             var onGestureAction: (TrackpadGestureAction) -> Void = { _ in }
             var onZoom: (CGFloat) -> Void = { _ in }
+            var onRotate: (CGFloat) -> Void = { _ in }
 
             private var scrollAccumulator: CGFloat = 0
             private let scrollStep: CGFloat = 6
 
             private var lastTapTime: TimeInterval = 0
+            private var lastTapLocation: CGPoint = .zero
             private var isDragging = false
 
             @objc func handleMove(_ pan: UIPanGestureRecognizer) {
@@ -121,7 +157,9 @@
                 switch pan.state {
                 case .began:
                     let now = CACurrentMediaTime()
-                    if now - lastTapTime < 0.35 {
+                    let loc = pan.location(in: view)
+                    let dist = hypot(loc.x - lastTapLocation.x, loc.y - lastTapLocation.y)
+                    if now - lastTapTime < 0.28 && dist < 35 {
                         isDragging = true
                         lastTapTime = 0
                         Haptics.tap()
@@ -162,15 +200,27 @@
             @objc func handlePinch(_ pinch: UIPinchGestureRecognizer) {
                 if pinch.state == .changed {
                     let delta = pinch.scale - 1.0
-                    if abs(delta) > 0.08 {
+                    if abs(delta) > 0.05 {
                         onZoom(delta)
                         pinch.scale = 1.0
                     }
                 }
             }
 
-            @objc func handleLeft() {
+            @objc func handleRotation(_ rot: UIRotationGestureRecognizer) {
+                if rot.state == .changed {
+                    let delta = rot.rotation
+                    if abs(delta) > 0.35 {
+                        onRotate(delta)
+                        rot.rotation = 0
+                    }
+                }
+            }
+
+            @objc func handleLeft(_ tap: UITapGestureRecognizer) {
+                guard let view = tap.view else { return }
                 lastTapTime = CACurrentMediaTime()
+                lastTapLocation = tap.location(in: view)
                 onLeftClick()
             }
 
@@ -184,6 +234,15 @@
                 Haptics.tap()
                 let raw = UserDefaults.standard.string(forKey: AppSettings.threeFingerTapKey)
                     ?? TrackpadGestureAction.spotlight.rawValue
+                if let action = TrackpadGestureAction(rawValue: raw) {
+                    onGestureAction(action)
+                }
+            }
+
+            @objc func handleFourFingerTap() {
+                Haptics.tap()
+                let raw = UserDefaults.standard.string(forKey: AppSettings.fourFingerTapKey)
+                    ?? TrackpadGestureAction.controlCenter.rawValue
                 if let action = TrackpadGestureAction(rawValue: raw) {
                     onGestureAction(action)
                 }
@@ -219,6 +278,42 @@
             @objc func handleSwipeRight() {
                 Haptics.tap()
                 let raw = UserDefaults.standard.string(forKey: AppSettings.threeFingerSwipeRightKey)
+                    ?? TrackpadGestureAction.nextApp.rawValue
+                if let action = TrackpadGestureAction(rawValue: raw) {
+                    onGestureAction(action)
+                }
+            }
+
+            @objc func handleFourSwipeUp() {
+                Haptics.tap()
+                let raw = UserDefaults.standard.string(forKey: AppSettings.fourFingerSwipeUpKey)
+                    ?? TrackpadGestureAction.dock.rawValue
+                if let action = TrackpadGestureAction(rawValue: raw) {
+                    onGestureAction(action)
+                }
+            }
+
+            @objc func handleFourSwipeDown() {
+                Haptics.tap()
+                let raw = UserDefaults.standard.string(forKey: AppSettings.fourFingerSwipeDownKey)
+                    ?? TrackpadGestureAction.home.rawValue
+                if let action = TrackpadGestureAction(rawValue: raw) {
+                    onGestureAction(action)
+                }
+            }
+
+            @objc func handleFourSwipeLeft() {
+                Haptics.tap()
+                let raw = UserDefaults.standard.string(forKey: AppSettings.fourFingerSwipeLeftKey)
+                    ?? TrackpadGestureAction.previousApp.rawValue
+                if let action = TrackpadGestureAction(rawValue: raw) {
+                    onGestureAction(action)
+                }
+            }
+
+            @objc func handleFourSwipeRight() {
+                Haptics.tap()
+                let raw = UserDefaults.standard.string(forKey: AppSettings.fourFingerSwipeRightKey)
                     ?? TrackpadGestureAction.nextApp.rawValue
                 if let action = TrackpadGestureAction(rawValue: raw) {
                     onGestureAction(action)

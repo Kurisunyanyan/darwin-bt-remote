@@ -20,6 +20,12 @@ enum AppSettings {
     static let threeFingerSwipeLeftKey = "BTRemote.threeFingerSwipeLeft"
     static let threeFingerSwipeRightKey = "BTRemote.threeFingerSwipeRight"
     static let threeFingerTapKey = "BTRemote.threeFingerTap"
+    static let fourFingerSwipeUpKey = "BTRemote.fourFingerSwipeUp"
+    static let fourFingerSwipeDownKey = "BTRemote.fourFingerSwipeDown"
+    static let fourFingerSwipeLeftKey = "BTRemote.fourFingerSwipeLeft"
+    static let fourFingerSwipeRightKey = "BTRemote.fourFingerSwipeRight"
+    static let fourFingerTapKey = "BTRemote.fourFingerTap"
+    static let rotationGestureActionKey = "BTRemote.rotationGestureAction"
 
     static let maxAdvertisedNameLength = 26
 

@@ -395,6 +395,27 @@ extension L10n {
         static var pinchToZoom: LocalizedStringKey {
             "gesture.pinch_to_zoom"
         }
+        static var rotationGesture: LocalizedStringKey {
+            "gesture.rotation"
+        }
+        static var fourFingerSectionTitle: LocalizedStringKey {
+            "gesture.four_finger_section_title"
+        }
+        static var fourFingerSwipeUp: LocalizedStringKey {
+            "gesture.four_finger_swipe_up"
+        }
+        static var fourFingerSwipeDown: LocalizedStringKey {
+            "gesture.four_finger_swipe_down"
+        }
+        static var fourFingerSwipeLeft: LocalizedStringKey {
+            "gesture.four_finger_swipe_left"
+        }
+        static var fourFingerSwipeRight: LocalizedStringKey {
+            "gesture.four_finger_swipe_right"
+        }
+        static var fourFingerTap: LocalizedStringKey {
+            "gesture.four_finger_tap"
+        }
         static var threeFingerSwipeUp: LocalizedStringKey {
             "gesture.three_finger_swipe_up"
         }
@@ -445,6 +466,12 @@ extension L10n {
         }
         static var actionZoom: LocalizedStringKey {
             "gesture.action_zoom"
+        }
+        static var actionRotateLeft: LocalizedStringKey {
+            "gesture.action_rotate_left"
+        }
+        static var actionRotateRight: LocalizedStringKey {
+            "gesture.action_rotate_right"
         }
     }
 

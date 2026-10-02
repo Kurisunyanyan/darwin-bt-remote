@@ -7,6 +7,7 @@ struct TrackpadPanel: View {
     @AppStorage(AppSettings.scrollSensitivityKey) private var scrollSensitivity = AppSettings.defaultScrollSensitivity
     @AppStorage(AppSettings.invertScrollKey) private var invertScroll = false
     @AppStorage(AppSettings.pinchGestureActionKey) private var pinchActionRaw = TrackpadGestureAction.zoom.rawValue
+    @AppStorage(AppSettings.rotationGestureActionKey) private var rotateActionRaw = TrackpadGestureAction.rotateRight.rawValue
     @State private var activeButtons: MouseButtons = []
     #if os(macOS)
         @State private var dragOffset: CGSize = .zero
@@ -49,6 +50,9 @@ struct TrackpadPanel: View {
                     },
                     onZoom: { delta in
                         handlePinchZoom(delta: delta)
+                    },
+                    onRotate: { delta in
+                        handleRotation(delta: delta)
                     }
                 )
             #endif
@@ -75,11 +79,24 @@ struct TrackpadPanel: View {
     private func handlePinchZoom(delta: CGFloat) {
         let action = TrackpadGestureAction(rawValue: pinchActionRaw) ?? .zoom
         if action == .zoom {
-            let wheelDelta: Int8 = delta > 0 ? 1 : -1
+            let wheelDelta: Int8 = delta > 0 ? 2 : -2
             hid.sendMouse(MouseReport(wheel: wheelDelta))
             hid.sendMouse(.zero)
         } else {
             action.execute(hid: hid)
+        }
+    }
+
+    private func handleRotation(delta: CGFloat) {
+        let action = TrackpadGestureAction(rawValue: rotateActionRaw)
+        if action == .rotateRight || action == .rotateLeft || action == nil {
+            if delta > 0 {
+                TrackpadGestureAction.rotateRight.execute(hid: hid)
+            } else {
+                TrackpadGestureAction.rotateLeft.execute(hid: hid)
+            }
+        } else {
+            action?.execute(hid: hid)
         }
     }
 

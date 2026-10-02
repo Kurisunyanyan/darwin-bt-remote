@@ -13,6 +13,8 @@ enum TrackpadGestureAction: String, CaseIterable, Identifiable {
     case screenshot = "screenshot"
     case middleClick = "middle_click"
     case zoom = "zoom"
+    case rotateLeft = "rotate_left"
+    case rotateRight = "rotate_right"
 
     var id: String { rawValue }
 
@@ -30,6 +32,8 @@ enum TrackpadGestureAction: String, CaseIterable, Identifiable {
         case .screenshot: L10n.Gesture.actionScreenshot
         case .middleClick: L10n.Gesture.actionMiddleClick
         case .zoom: L10n.Gesture.actionZoom
+        case .rotateLeft: L10n.Gesture.actionRotateLeft
+        case .rotateRight: L10n.Gesture.actionRotateRight
         }
     }
 
@@ -47,6 +51,8 @@ enum TrackpadGestureAction: String, CaseIterable, Identifiable {
         case .screenshot: "Cmd+Shift+3"
         case .middleClick: "Mouse Middle Button"
         case .zoom: "Ctrl+Scroll"
+        case .rotateLeft: "Cmd+Left / Cmd+L"
+        case .rotateRight: "Cmd+R"
         }
     }
 
@@ -76,6 +82,10 @@ enum TrackpadGestureAction: String, CaseIterable, Identifiable {
             hid.click(.middle)
         case .zoom:
             break
+        case .rotateLeft:
+            hid.tap(.r, modifiers: [.leftGUI, .leftAlt])
+        case .rotateRight:
+            hid.tap(.r, modifiers: .leftGUI)
         }
     }
 }

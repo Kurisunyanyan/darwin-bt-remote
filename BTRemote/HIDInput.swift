@@ -41,7 +41,10 @@ struct HIDInput {
 
     func click(_ button: MouseButtons) {
         sendMouse(MouseReport(buttons: button))
-        sendMouse(.zero)
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 25_000_000)
+            sendMouse(.zero)
+        }
     }
 
     func move(dx: Int8, dy: Int8, buttons: MouseButtons = []) {
