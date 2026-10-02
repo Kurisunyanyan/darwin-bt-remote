@@ -34,6 +34,7 @@ jobs:
 
       - name: Build iOS IPA
         run: |
+          set -o pipefail
           PROJECT="BTRemote"
           xcodebuild \
             -project $PROJECT.xcodeproj \
@@ -48,12 +49,14 @@ jobs:
           rm -rf .build/Payload
           mkdir -p .build/Payload
           cp -R .build/DerivedData/Build/Products/Release-iphoneos/$PROJECT.app .build/Payload/
+          test -f .build/Payload/$PROJECT.app/$PROJECT || { echo "Binary not found in app bundle!"; exit 1; }
           cd .build
           zip -qry ../$PROJECT.ipa Payload
           cd ..
 
       - name: Build macOS App
         run: |
+          set -o pipefail
           PROJECT="BTRemote"
           xcodebuild \
             -project $PROJECT.xcodeproj \

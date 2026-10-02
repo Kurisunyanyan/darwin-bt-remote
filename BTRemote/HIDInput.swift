@@ -39,11 +39,13 @@ struct HIDInput {
         tap(consumer: .eject)
     }
 
+    @MainActor
     func click(_ button: MouseButtons) {
         sendMouse(MouseReport(buttons: button))
+        let sender = sendMouse
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 25_000_000)
-            sendMouse(.zero)
+            sender(.zero)
         }
     }
 
