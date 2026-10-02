@@ -56,6 +56,7 @@ enum TrackpadGestureAction: String, CaseIterable, Identifiable {
         }
     }
 
+    @MainActor
     func execute(hid: HIDInput) {
         switch self {
         case .none:
