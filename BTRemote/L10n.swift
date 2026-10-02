@@ -383,6 +383,12 @@ extension L10n {
         static var sectionTitle: LocalizedStringKey {
             "gesture.section_title"
         }
+        static var doubleTapDrag: LocalizedStringKey {
+            "gesture.double_tap_drag"
+        }
+        static var doubleTapDragHint: LocalizedStringKey {
+            "gesture.double_tap_drag_hint"
+        }
         static var invertScroll: LocalizedStringKey {
             "gesture.invert_scroll"
         }

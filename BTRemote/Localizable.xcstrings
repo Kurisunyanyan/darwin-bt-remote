@@ -2629,6 +2629,28 @@
           }
         }
       }
+    },
+    "gesture.double_tap_drag": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Double-Tap and Drag"
+          }
+        }
+      }
+    },
+    "gesture.double_tap_drag_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap twice quickly and hold to drag. Turn off if it interferes with single clicks."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

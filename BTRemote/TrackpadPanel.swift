@@ -6,6 +6,7 @@ struct TrackpadPanel: View {
     @AppStorage(AppSettings.touchpadSensitivityKey) private var touchpadSensitivity = AppSettings.defaultPointerSensitivity
     @AppStorage(AppSettings.scrollSensitivityKey) private var scrollSensitivity = AppSettings.defaultScrollSensitivity
     @AppStorage(AppSettings.invertScrollKey) private var invertScroll = false
+    @AppStorage(AppSettings.doubleTapDragKey) private var doubleTapDrag = true
     @AppStorage(AppSettings.pinchGestureActionKey) private var pinchActionRaw = TrackpadGestureAction.zoom.rawValue
     @AppStorage(AppSettings.rotationGestureActionKey) private var rotateActionRaw = TrackpadGestureAction.rotateRight.rawValue
     @State private var activeButtons: MouseButtons = []
@@ -32,6 +33,7 @@ struct TrackpadPanel: View {
                     moveSensitivity: touchpadSensitivity,
                     scrollSensitivity: scrollSensitivity,
                     invertScroll: invertScroll,
+                    doubleTapDragEnabled: doubleTapDrag,
                     onMove: { dx, dy, isDragging in
                         var buttons = activeButtons
                         if isDragging {
@@ -79,9 +81,8 @@ struct TrackpadPanel: View {
     private func handlePinchZoom(delta: CGFloat) {
         let action = TrackpadGestureAction(rawValue: pinchActionRaw) ?? .zoom
         if action == .zoom {
-            let wheelDelta: Int8 = delta > 0 ? 2 : -2
-            hid.sendMouse(MouseReport(wheel: wheelDelta))
-            hid.sendMouse(.zero)
+            let key: Keycode = delta > 0 ? .equal : .minus
+            hid.tap(key, modifiers: .leftGUI)
         } else {
             action.execute(hid: hid)
         }

@@ -27,6 +27,7 @@ enum AppSettings {
     static let fourFingerSwipeRightKey = "BTRemote.fourFingerSwipeRight"
     static let fourFingerTapKey = "BTRemote.fourFingerTap"
     static let rotationGestureActionKey = "BTRemote.rotationGestureAction"
+    static let doubleTapDragKey = "BTRemote.doubleTapDrag"
 
     static let maxAdvertisedNameLength = 26
 

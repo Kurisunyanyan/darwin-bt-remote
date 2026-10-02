@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TrackpadGestureSettingsView: View {
     @AppStorage(AppSettings.invertScrollKey) private var invertScroll = false
+    @AppStorage(AppSettings.doubleTapDragKey) private var doubleTapDrag = true
     @AppStorage(AppSettings.pinchGestureActionKey) private var pinchAction = TrackpadGestureAction.zoom.rawValue
     @AppStorage(AppSettings.rotationGestureActionKey) private var rotateAction = TrackpadGestureAction.rotateRight.rawValue
 
@@ -24,6 +25,7 @@ struct TrackpadGestureSettingsView: View {
                 footer: Text(L10n.Gesture.invertScrollHint)
             ) {
                 Toggle(L10n.Gesture.invertScroll, isOn: $invertScroll)
+                Toggle(L10n.Gesture.doubleTapDrag, isOn: $doubleTapDrag)
             }
 
             Section(header: Text(L10n.Gesture.mappingTitle)) {

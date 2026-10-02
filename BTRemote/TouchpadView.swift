@@ -3,7 +3,7 @@
     import UIKit
 
     /// 1-finger drag: moves
-    /// 1-finger double-tap drag: drags with left button down
+    /// 1-finger double-tap drag: drags with left button down (if enabled)
     /// 1-finger tap: left-clicks
     /// 2-finger tap: right-clicks
     /// 2-finger drag: scrolls (supports direction inversion)
@@ -17,6 +17,7 @@
         var moveSensitivity: CGFloat
         var scrollSensitivity: CGFloat
         var invertScroll: Bool
+        var doubleTapDragEnabled: Bool
         var onMove: (_ dx: Int8, _ dy: Int8, _ isDragging: Bool) -> Void
         var onScroll: (Int8) -> Void
         var onLeftClick: () -> Void
@@ -52,7 +53,7 @@
             let rotation = UIRotationGestureRecognizer(target: c, action: #selector(Coordinator.handleRotation(_:)))
             rotation.delegate = c
 
-            let left = UITapGestureRecognizer(target: c, action: #selector(Coordinator.handleLeft))
+            let left = UITapGestureRecognizer(target: c, action: #selector(Coordinator.handleLeft(_:)))
             left.numberOfTouchesRequired = 1
             left.delegate = c
 
@@ -108,6 +109,10 @@
             fourSwipeRight.direction = .right
             fourSwipeRight.delegate = c
 
+            c.scrollRecognizer = scroll
+            c.pinchRecognizer = pinch
+            c.rotationRecognizer = rotation
+
             [move, scroll, pinch, rotation, left, right, threeTap, fourTap,
              swipeUp, swipeDown, swipeLeft, swipeRight,
              fourSwipeUp, fourSwipeDown, fourSwipeLeft, fourSwipeRight]
@@ -121,6 +126,7 @@
             c.moveSensitivity = moveSensitivity
             c.scrollSensitivity = scrollSensitivity
             c.invertScroll = invertScroll
+            c.doubleTapDragEnabled = doubleTapDragEnabled
             c.onMove = onMove
             c.onScroll = onScroll
             c.onLeftClick = onLeftClick
@@ -136,6 +142,7 @@
             var moveSensitivity: CGFloat = 1
             var scrollSensitivity: CGFloat = 1
             var invertScroll = false
+            var doubleTapDragEnabled = true
             var onMove: (Int8, Int8, Bool) -> Void = { _, _, _ in }
             var onScroll: (Int8) -> Void = { _ in }
             var onLeftClick: () -> Void = {}
@@ -145,25 +152,32 @@
             var onZoom: (CGFloat) -> Void = { _ in }
             var onRotate: (CGFloat) -> Void = { _ in }
 
+            weak var scrollRecognizer: UIPanGestureRecognizer?
+            weak var pinchRecognizer: UIPinchGestureRecognizer?
+            weak var rotationRecognizer: UIRotationGestureRecognizer?
+
             private var scrollAccumulator: CGFloat = 0
             private let scrollStep: CGFloat = 6
 
             private var lastTapTime: TimeInterval = 0
             private var lastTapLocation: CGPoint = .zero
             private var isDragging = false
+            private var isPinching = false
 
             @objc func handleMove(_ pan: UIPanGestureRecognizer) {
                 guard let view = pan.view else { return }
                 switch pan.state {
                 case .began:
-                    let now = CACurrentMediaTime()
-                    let loc = pan.location(in: view)
-                    let dist = hypot(loc.x - lastTapLocation.x, loc.y - lastTapLocation.y)
-                    if now - lastTapTime < 0.28 && dist < 35 {
-                        isDragging = true
-                        lastTapTime = 0
-                        Haptics.tap()
-                        onMove(0, 0, true)
+                    if doubleTapDragEnabled {
+                        let now = CACurrentMediaTime()
+                        let loc = pan.location(in: view)
+                        let dist = hypot(loc.x - lastTapLocation.x, loc.y - lastTapLocation.y)
+                        if now - lastTapTime < 0.28 && dist < 30 {
+                            isDragging = true
+                            lastTapTime = 0
+                            Haptics.tap()
+                            onMove(0, 0, true)
+                        }
                     }
                 case .changed:
                     let t = pan.translation(in: view)
@@ -184,7 +198,7 @@
             }
 
             @objc func handleScroll(_ pan: UIPanGestureRecognizer) {
-                guard let view = pan.view else { return }
+                guard let view = pan.view, !isPinching else { return }
                 if pan.state == .began { scrollAccumulator = 0 }
                 scrollAccumulator += pan.translation(in: view).y
                 pan.setTranslation(.zero, in: view)
@@ -198,22 +212,45 @@
             }
 
             @objc func handlePinch(_ pinch: UIPinchGestureRecognizer) {
-                if pinch.state == .changed {
+                switch pinch.state {
+                case .began:
+                    isPinching = true
+                    scrollAccumulator = 0
+                case .changed:
+                    isPinching = true
                     let delta = pinch.scale - 1.0
-                    if abs(delta) > 0.05 {
+                    if abs(delta) > 0.04 {
                         onZoom(delta)
                         pinch.scale = 1.0
                     }
+                case .ended, .cancelled:
+                    Task { @MainActor in
+                        try? await Task.sleep(nanoseconds: 150_000_000)
+                        self.isPinching = false
+                    }
+                default:
+                    break
                 }
             }
 
             @objc func handleRotation(_ rot: UIRotationGestureRecognizer) {
-                if rot.state == .changed {
+                switch rot.state {
+                case .began:
+                    isPinching = true
+                case .changed:
+                    isPinching = true
                     let delta = rot.rotation
-                    if abs(delta) > 0.35 {
+                    if abs(delta) > 0.25 {
                         onRotate(delta)
                         rot.rotation = 0
                     }
+                case .ended, .cancelled:
+                    Task { @MainActor in
+                        try? await Task.sleep(nanoseconds: 150_000_000)
+                        self.isPinching = false
+                    }
+                default:
+                    break
                 }
             }
 
