@@ -13,6 +13,13 @@ enum AppSettings {
     static let advertisedNameKey = "BTRemote.advertisedName"
     static let precisionTouchpadKey = "BTRemote.precisionTouchpad"
     static let naturalScrollKey = "BTRemote.naturalScroll"
+    static let invertScrollKey = "BTRemote.invertScroll"
+    static let pinchGestureActionKey = "BTRemote.pinchGestureAction"
+    static let threeFingerSwipeUpKey = "BTRemote.threeFingerSwipeUp"
+    static let threeFingerSwipeDownKey = "BTRemote.threeFingerSwipeDown"
+    static let threeFingerSwipeLeftKey = "BTRemote.threeFingerSwipeLeft"
+    static let threeFingerSwipeRightKey = "BTRemote.threeFingerSwipeRight"
+    static let threeFingerTapKey = "BTRemote.threeFingerTap"
 
     static let maxAdvertisedNameLength = 26
 

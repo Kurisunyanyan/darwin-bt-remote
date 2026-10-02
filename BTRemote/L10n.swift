@@ -377,7 +377,76 @@ extension L10n {
         static var classic: LocalizedStringKey {
             "keyboard.classic"
         }
+        enum Gesture {
+        static var sectionTitle: LocalizedStringKey {
+            "gesture.section_title"
+        }
+        static var invertScroll: LocalizedStringKey {
+            "gesture.invert_scroll"
+        }
+        static var invertScrollHint: LocalizedStringKey {
+            "gesture.invert_scroll_hint"
+        }
+        static var mappingTitle: LocalizedStringKey {
+            "gesture.mapping_title"
+        }
+        static var pinchToZoom: LocalizedStringKey {
+            "gesture.pinch_to_zoom"
+        }
+        static var threeFingerSwipeUp: LocalizedStringKey {
+            "gesture.three_finger_swipe_up"
+        }
+        static var threeFingerSwipeDown: LocalizedStringKey {
+            "gesture.three_finger_swipe_down"
+        }
+        static var threeFingerSwipeLeft: LocalizedStringKey {
+            "gesture.three_finger_swipe_left"
+        }
+        static var threeFingerSwipeRight: LocalizedStringKey {
+            "gesture.three_finger_swipe_right"
+        }
+        static var threeFingerTap: LocalizedStringKey {
+            "gesture.three_finger_tap"
+        }
+        static var actionNone: LocalizedStringKey {
+            "gesture.action_none"
+        }
+        static var actionAppSwitcher: LocalizedStringKey {
+            "gesture.action_app_switcher"
+        }
+        static var actionHome: LocalizedStringKey {
+            "gesture.action_home"
+        }
+        static var actionDock: LocalizedStringKey {
+            "gesture.action_dock"
+        }
+        static var actionPreviousApp: LocalizedStringKey {
+            "gesture.action_previous_app"
+        }
+        static var actionNextApp: LocalizedStringKey {
+            "gesture.action_next_app"
+        }
+        static var actionSpotlight: LocalizedStringKey {
+            "gesture.action_spotlight"
+        }
+        static var actionControlCenter: LocalizedStringKey {
+            "gesture.action_control_center"
+        }
+        static var actionNotificationCenter: LocalizedStringKey {
+            "gesture.action_notification_center"
+        }
+        static var actionScreenshot: LocalizedStringKey {
+            "gesture.action_screenshot"
+        }
+        static var actionMiddleClick: LocalizedStringKey {
+            "gesture.action_middle_click"
+        }
+        static var actionZoom: LocalizedStringKey {
+            "gesture.action_zoom"
+        }
     }
+
+}
 
     enum DirectInput {
         static var section: LocalizedStringKey {

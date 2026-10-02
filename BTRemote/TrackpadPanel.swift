@@ -5,8 +5,8 @@ struct TrackpadPanel: View {
 
     @AppStorage(AppSettings.touchpadSensitivityKey) private var touchpadSensitivity = AppSettings.defaultPointerSensitivity
     @AppStorage(AppSettings.scrollSensitivityKey) private var scrollSensitivity = AppSettings.defaultScrollSensitivity
-    @AppStorage(AppSettings.precisionTouchpadKey) private var precisionTouchpad = false
-    @AppStorage(AppSettings.naturalScrollKey) private var naturalScroll = true
+    @AppStorage(AppSettings.invertScrollKey) private var invertScroll = false
+    @AppStorage(AppSettings.pinchGestureActionKey) private var pinchActionRaw = TrackpadGestureAction.zoom.rawValue
     @State private var activeButtons: MouseButtons = []
     #if os(macOS)
         @State private var dragOffset: CGSize = .zero
@@ -28,10 +28,9 @@ struct TrackpadPanel: View {
             RoundedRectangle(cornerRadius: 12).fill(groupFill)
             #if os(iOS)
                 TouchpadView(
-                    precisionMode: precisionTouchpad,
-                    naturalScroll: naturalScroll,
                     moveSensitivity: touchpadSensitivity,
                     scrollSensitivity: scrollSensitivity,
+                    invertScroll: invertScroll,
                     onMove: { dx, dy, isDragging in
                         var buttons = activeButtons
                         if isDragging {
@@ -45,12 +44,11 @@ struct TrackpadPanel: View {
                     onDragEnd: {
                         hid.sendMouse(MouseReport(buttons: activeButtons))
                     },
-                    onDigitizer: { report in
-                        var rep = report
-                        if activeButtons.contains(.left) {
-                            rep.button = true
-                        }
-                        hid.sendDigitizer(rep)
+                    onGestureAction: { action in
+                        action.execute(hid: hid)
+                    },
+                    onZoom: { delta in
+                        handlePinchZoom(delta: delta)
                     }
                 )
             #endif
@@ -72,6 +70,17 @@ struct TrackpadPanel: View {
                     }
             )
         #endif
+    }
+
+    private func handlePinchZoom(delta: CGFloat) {
+        let action = TrackpadGestureAction(rawValue: pinchActionRaw) ?? .zoom
+        if action == .zoom {
+            let wheelDelta: Int8 = delta > 0 ? 1 : -1
+            hid.sendMouse(MouseReport(wheel: wheelDelta))
+            hid.sendMouse(.zero)
+        } else {
+            action.execute(hid: hid)
+        }
     }
 
     private var scrollAmount: Int8 {

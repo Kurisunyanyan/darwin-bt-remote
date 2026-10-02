@@ -2244,6 +2244,248 @@
           }
         }
       }
+    },
+    "gesture.section_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trackpad Gestures & Actions"
+          }
+        }
+      }
+    },
+    "gesture.invert_scroll": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invert Scroll Direction"
+          }
+        }
+      }
+    },
+    "gesture.invert_scroll_hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reverse two-finger scroll direction when mapped to mouse wheel."
+          }
+        }
+      }
+    },
+    "gesture.mapping_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Multi-Touch Gesture Mapping"
+          }
+        }
+      }
+    },
+    "gesture.pinch_to_zoom": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pinch (Zoom)"
+          }
+        }
+      }
+    },
+    "gesture.three_finger_swipe_up": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three-Finger Swipe Up"
+          }
+        }
+      }
+    },
+    "gesture.three_finger_swipe_down": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three-Finger Swipe Down"
+          }
+        }
+      }
+    },
+    "gesture.three_finger_swipe_left": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three-Finger Swipe Left"
+          }
+        }
+      }
+    },
+    "gesture.three_finger_swipe_right": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three-Finger Swipe Right"
+          }
+        }
+      }
+    },
+    "gesture.three_finger_tap": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three-Finger Tap"
+          }
+        }
+      }
+    },
+    "gesture.action_none": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None"
+          }
+        }
+      }
+    },
+    "gesture.action_app_switcher": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App Switcher (Multitasking)"
+          }
+        }
+      }
+    },
+    "gesture.action_home": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home Screen"
+          }
+        }
+      }
+    },
+    "gesture.action_dock": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show / Hide Dock"
+          }
+        }
+      }
+    },
+    "gesture.action_previous_app": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previous App"
+          }
+        }
+      }
+    },
+    "gesture.action_next_app": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next App"
+          }
+        }
+      }
+    },
+    "gesture.action_spotlight": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search (Spotlight)"
+          }
+        }
+      }
+    },
+    "gesture.action_control_center": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Control Center"
+          }
+        }
+      }
+    },
+    "gesture.action_notification_center": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notification Center"
+          }
+        }
+      }
+    },
+    "gesture.action_screenshot": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take Screenshot"
+          }
+        }
+      }
+    },
+    "gesture.action_middle_click": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mouse Middle Click"
+          }
+        }
+      }
+    },
+    "gesture.action_zoom": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom (Ctrl+Wheel)"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
